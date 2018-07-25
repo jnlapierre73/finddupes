@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedMap;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -15,7 +16,7 @@ import com.gmail.jnlapierre73.entities.Contact;
 public class Finddupes {
     
 	private static final String NORMAL = "csv/normal.csv";
-	private static final String ADVANCED = "advanced.csv";
+	private static final String ADVANCED = "csv/advanced.csv";
 	
 	private static final String[] FILE_HEADER_MAPPING = { "id", "first_name", "last_name", "company", "email",
 			"address1", "address2", "zip", "city", "state_long", "state", "phone" };
@@ -33,9 +34,15 @@ public class Finddupes {
 	private static final String STATE = "state";
 	private static final String PHONE = "phone";
 
-	private ArrayList<Contact> sourceContacts;
+	private static ArrayList<Contact> sourceContacts;
+	private static SortedMap<Integer, ArrayList<Contact>> potentialDuplicates;
+	private static ArrayList<Contact> notDuplicated;
 
 	public static void main(String[] args) {
+        //Create a new list of student to be filled by CSV file data 
+        List<Contact> sourceContacts = new ArrayList<Contact>();
+
+		// Load the file into an initial array list of contacts
 		FileReader fileReader = null;
 		CSVParser csvFileParser = null;
 		// Create the CSVFormat object with the header mapping
@@ -46,8 +53,6 @@ public class Finddupes {
 		File file = new File(classLoader.getResource(NORMAL).getFile());
 		
         try {
-            //Create a new list of student to be filled by CSV file data 
-            List<Contact> sourceContacts = new ArrayList<Contact>();
             //initialize FileReader object
             fileReader = new FileReader(file);
             //initialize CSVParser object
@@ -91,6 +96,13 @@ public class Finddupes {
                 System.out.println("Error while closing fileReader/csvFileParser !!!");
                 e.printStackTrace();
             }
+        }
+        
+        Contact initialContact = sourceContacts.get(0);
+        for (Contact contact : sourceContacts) {
+        	if (initialContact.getId() != contact.getId()) {
+        	System.out.println("Contact: " + initialContact.getId() + " " + initialContact.isDuplicate(contact));	
+        	}
         }
     }
 		

@@ -1,9 +1,11 @@
 package com.gmail.jnlapierre73.entities;
 
 import com.gmail.jnlapierre73.interfaces.Duplicate;
+import com.gmail.jnlapierre73.utilities.LevenshteinDistance;
 
 public class Contact implements Duplicate<Contact> {
 
+	private static final int DISTANCE_THRESHOLD = 3;
 	
 	
 	private int id; // Used as a key in the Map storing potential duplicates together
@@ -24,6 +26,25 @@ public class Contact implements Duplicate<Contact> {
 	}
 	
 	public boolean isDuplicate(Contact contact) {
+		int distance = 0;
+		
+		// Gather all the Levenshtein distances
+		distance += LevenshteinDistance.distance(this.getFirstName(), contact.getFirstName());
+		distance += LevenshteinDistance.distance(this.getLastName(), contact.getLastName());
+		distance += LevenshteinDistance.distance(this.getCompany(), contact.getCompany());
+		distance += LevenshteinDistance.distance(this.getEmail(), contact.getEmail());
+		distance += LevenshteinDistance.distance(this.getAddress1(), contact.getAddress1());
+		distance += LevenshteinDistance.distance(this.getAddress2(), contact.getAddress2());
+		distance += LevenshteinDistance.distance(this.getZip(), contact.getZip());
+		distance += LevenshteinDistance.distance(this.getCity(), contact.getCity());
+		distance += LevenshteinDistance.distance(this.getStateLong(), contact.getStateLong());
+		distance += LevenshteinDistance.distance(this.getState(), contact.getState());
+		distance += LevenshteinDistance.distance(this.getPhone(), contact.getPhone());
+		
+		// Average them
+		distance = distance/11;
+		System.out.println("Average distance: " + distance);
+		
 		return false;
 	}
 
