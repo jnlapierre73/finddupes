@@ -43,9 +43,9 @@ public class Contact implements Duplicate<Contact> {
 		
 		// Average them
 		distance = distance/11;
-		System.out.println("Average distance: " + distance);
+		//System.out.println("Average distance: " + distance);
 		
-		return false;
+		return distance <= DISTANCE_THRESHOLD;
 	}
 
 	public int getId() {

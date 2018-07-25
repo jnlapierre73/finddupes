@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -39,8 +40,12 @@ public class Finddupes {
 	private static ArrayList<Contact> notDuplicated;
 
 	public static void main(String[] args) {
-        //Create a new list of student to be filled by CSV file data 
+        //Create a new list of contacts to be filled by CSV file data 
         List<Contact> sourceContacts = new ArrayList<Contact>();
+        // Create a new list of not duplicated contacts
+        List<Contact> notDuplicated = new ArrayList<Contact>();
+        // Create a new list of grouped potential duplicates
+        SortedMap<Integer, ArrayList<Contact>> potentialDuplicates = new TreeMap<Integer, ArrayList<Contact>>();
 
 		// Load the file into an initial array list of contacts
 		FileReader fileReader = null;
@@ -98,12 +103,35 @@ public class Finddupes {
             }
         }
         
-        Contact initialContact = sourceContacts.get(0);
-        for (Contact contact : sourceContacts) {
-        	if (initialContact.getId() != contact.getId()) {
-        	System.out.println("Contact: " + initialContact.getId() + " " + initialContact.isDuplicate(contact));	
+        boolean duplicate = false;
+        for (Contact initialContact : sourceContacts) {
+        	duplicate = false;
+        	for (Contact contact : sourceContacts) {
+        		if (initialContact.getId() != contact.getId()) { // Do not get a false possitive duplication to itself
+        			// Check to see if contact is a potential duplicate
+        			if (initialContact.isDuplicate(contact)) {
+        				// If so, check to see if we've already found and created a record for this duplicate
+        				if (potentialDuplicates.containsKey(initialContact.getId())) {
+        					potentialDuplicates.get(initialContact.getId()).add(contact);
+        				} else {
+        					// If not, create a new record and add both the initial contact and the duplicate
+        					potentialDuplicates.put(initialContact.getId(), new ArrayList<Contact>());
+        					potentialDuplicates.get(initialContact.getId()).add(initialContact);
+        					potentialDuplicates.get(initialContact.getId()).add(contact);
+        				}
+        				// Flag it
+        				duplicate = true;
+        			}
+        		}	
+        	}
+
+        	if (!duplicate) {
+        		notDuplicated.add(initialContact);
         	}
         }
+        
+        System.out.println("Potential Duplicates: " + potentialDuplicates);
+        System.out.println("Not duplictes: " + notDuplicated);
     }
 		
 }
