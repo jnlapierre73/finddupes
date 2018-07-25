@@ -1,5 +1,7 @@
 package com.gmail.jnlapierre73.entities;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.gmail.jnlapierre73.interfaces.Duplicate;
 import com.gmail.jnlapierre73.utilities.LevenshteinDistance;
 
@@ -44,6 +46,13 @@ public class Contact implements Duplicate<Contact> {
 		// Average them
 		distance = distance/11;
 		//System.out.println("Average distance: " + distance);
+		
+		// The interface will also enable special cases and processing for specific fields, such
+		// as, if the emails are the same, it's always a duplicate (as an example)
+		if (StringUtils.equals(this.getEmail(), contact.getEmail())) {
+			//Special case
+			return true;
+		}
 		
 		return distance <= DISTANCE_THRESHOLD;
 	}
