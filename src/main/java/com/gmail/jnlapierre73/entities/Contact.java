@@ -16,6 +16,7 @@ public class Contact implements Duplicate<Contact> {
 	private String address2;
 	private String zip;
 	private String city;
+	private String stateLong;
 	private String state;
 	private String phone;
 	
@@ -215,5 +216,13 @@ public class Contact implements Duplicate<Contact> {
 		return "Contact [id=" + id + ", hiddenId=" + hiddenId + ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", company=" + company + ", email=" + email + ", address1=" + address1 + ", address2=" + address2
 				+ ", zip=" + zip + ", city=" + city + ", state=" + state + ", phone=" + phone + "]";
+	}
+
+	public String getStateLong() {
+		return stateLong;
+	}
+
+	public void setStateLong(String stateLong) {
+		this.stateLong = stateLong;
 	}
 }
