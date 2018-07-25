@@ -13,6 +13,8 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import com.gmail.jnlapierre73.entities.Contact;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class Finddupes {
     
@@ -130,8 +132,14 @@ public class Finddupes {
         	}
         }
         
-        System.out.println("Potential Duplicates: " + potentialDuplicates);
-        System.out.println("Not duplictes: " + notDuplicated);
+        System.out.println("Potential Duplicates: ");
+        Gson gson = new GsonBuilder().create();
+        for (Integer key : potentialDuplicates.keySet()) {
+        	System.out.println(gson.toJson(potentialDuplicates.get(key)));
+        	System.out.println("");
+        }
+        System.out.println("Not duplictes: ");
+        System.out.println(gson.toJson(notDuplicated));
     }
 		
 }
